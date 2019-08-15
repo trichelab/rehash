@@ -1,0 +1,47 @@
+Package: rehash
+Type: Package
+Title: Lightly anonymize and deanonymize datasets for quasi-public distribution
+Description: Suppose you have a few thousand samples with a few thousand
+             features measured in a few assays. It would be nice to distribute
+             these results via The Cloud, but once something is available on
+             the Internet, it may as well be permanent. Thus it would be nice
+             to obscure any identifying features of the data, lest some sort of
+             overlooked data leakage might harm a participant in the study, or 
+             more generally, to keep things semi-private prior to publication. 
+             Another possibility is that samples could be mislabeled, or assays
+             corrupt, or any of a number of other possible pitfalls. Breaking 
+             direct dependencies upon human-readable identifiers for stored
+             datasets can help cope with all of the above, and make cloud-based 
+             data distribution less stressful, by providing both an encoder and
+             decoder ring for the data, as well as semantically separating the 
+             sample-level, assay-level, and feature-level covariates from the 
+             deidentified assay data (the latter typically the largest file).
+             This approach works with remote and local data, in-core and also 
+             out-of-core. The 'rehash' package provides implementations for 
+             quasi-anonymizing SummarizedExperiments, SingleCellExperiments,
+             and BSseq objects, as well as recovering the above (given a meta-
+             data key and, optionally, appropriately keyed covariates). 
+Version: 0.1.1
+Date: 2019-08-15
+Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), email="tim.triche@gmail.com"))
+Author: Tim Triche [aut, cre]
+Maintainer: Tim Triche <trichelab@gmail.com>
+URL: https://github.com/trichelab/rehash
+BugReports: https://github.com/trichelab/rehash/issues
+License: MIT + file LICENSE
+Depends:
+    R (>= 3.0.0)
+Imports:
+    digest,
+    SummarizedExperiment,
+    SingleCellExperiment,
+    bsseq
+Suggests:
+    covr,
+    testthat,
+    HDF5Array,
+    restfulSE,
+    DelayedMatrixStats,
+    MultiAssayExperiment
+RoxygenNote: 6.1.1
+Roxygen: list(markdown = TRUE)
