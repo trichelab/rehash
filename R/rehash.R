@@ -4,6 +4,13 @@
 #' @param salt  the salt to apply (NULL)
 #' @param ...   other parameters to pass on to digest::digest
 #' 
+#' @return      an object of the appropriate class
+#' 
+#' @seealso dehash
+#' @seealso rehashSE
+#' @seealso rehashSCE
+#' @seealso rehashBSseq 
+#' 
 #' @import digest
 #' 
 #' @export

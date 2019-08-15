@@ -1,9 +1,17 @@
-#' a virtual function, since one-way hashes only make sense forwards...
+#' a virtual function, since one-way hashes only make sense forwards... thus
+#' delegates (dehashSE for SummarizedExperiments, dehashSCE for 
+#' SingleCellExperiments, dehashBSseq for BSseq objects, and so forth) do all 
+#' of the heavy lifting for this method.
 #' 
 #' @param x     the thing to dehash
 #' @param ...   arguments to pass to the called function for objects like x 
 #' 
 #' @return      an object of the same class as x, but with identities restored
+#' 
+#' @seealso rehash
+#' @seealso dehashSE
+#' @seealso dehashSCE
+#' @seealso dehashBSseq 
 #'
 #' @export
 dehash <- function(x, ...) {

@@ -13,6 +13,19 @@ rehash(x, salt = NULL, ...)
 
 \item{...}{other parameters to pass on to digest::digest}
 }
+\value{
+\preformatted{ an object of the appropriate class
+}
+}
 \description{
 a salty hashing function (and a generic that dispatches it)
+}
+\seealso{
+dehash
+
+rehashSE
+
+rehashSCE
+
+rehashBSseq
 }

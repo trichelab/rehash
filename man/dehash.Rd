@@ -2,7 +2,10 @@
 % Please edit documentation in R/dehash.R
 \name{dehash}
 \alias{dehash}
-\title{a virtual function, since one-way hashes only make sense forwards...}
+\title{a virtual function, since one-way hashes only make sense forwards... thus
+delegates (dehashSE for SummarizedExperiments, dehashSCE for
+SingleCellExperiments, dehashBSseq for BSseq objects, and so forth) do all
+of the heavy lifting for this method.}
 \usage{
 dehash(x, ...)
 }
@@ -16,5 +19,17 @@ dehash(x, ...)
 }
 }
 \description{
-a virtual function, since one-way hashes only make sense forwards...
+a virtual function, since one-way hashes only make sense forwards... thus
+delegates (dehashSE for SummarizedExperiments, dehashSCE for
+SingleCellExperiments, dehashBSseq for BSseq objects, and so forth) do all
+of the heavy lifting for this method.
+}
+\seealso{
+rehash
+
+dehashSE
+
+dehashSCE
+
+dehashBSseq
 }
