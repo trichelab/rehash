@@ -38,18 +38,21 @@
 #' 
 #' library(HDF5Array)
 #' deIDedPath <- file.path(tempdir() , "deIDed") 
-#' deIDed <- saveHDF5SummarizedExperiment(deIDed, deIDedPath)
+#' deIDed <- saveHDF5SummarizedExperiment(deIDed, deIDedPath, replace=TRUE)
 #'
 #' reIDed <- dehash(deIDed, meta=meta, covs=covs)
 #' reIDedPath <- file.path(tempdir() , "reIDed") 
-#' reIDed <- saveHDF5SummarizedExperiment(deIDed, deIDedPath)
-#' stopifnot(identical(colnames(reIDed), colnames(rse)))
-#' stopifnot(identical(rownames(reIDed), rownames(rse)))
-#' 
-#' setMethod("counts", "SummarizedExperiment", 
-#'   function(object) assay(object, which(names(assays(object)) == "counts")))
+#' reIDed <- saveHDF5SummarizedExperiment(reIDed, reIDedPath, replace=TRUE)
+#' if (!is.null(colnames(rse))) {
+#'   stopifnot(identical(colnames(reIDed), colnames(rse)))
+#' } 
+#' if (!is.null(rownames(rse))) {
+#'   stopifnot(identical(rownames(reIDed), rownames(rse)))
+#' } 
 #' 
 #' library(DelayedMatrixStats)
+#' setMethod("counts", "SummarizedExperiment", 
+#'   function(object) assay(object, which(names(assays(object)) == "counts")))
 #' stopifnot(identical(colSums2(counts(reIDed)), colSums2(counts(rse))))
 #' stopifnot(identical(rowSums2(counts(reIDed)), rowSums2(counts(rse))))
 #' show(reIDed)

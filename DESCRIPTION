@@ -21,7 +21,7 @@ Description: Suppose you have a few thousand samples with a few thousand
              quasi-anonymizing SummarizedExperiments, SingleCellExperiments,
              and BSseq objects, as well as recovering the above (given a meta-
              data key and, optionally, appropriately keyed covariates). 
-Version: 0.1.2
+Version: 0.1.3
 Date: 2019-08-15
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), email="tim.triche@gmail.com"))
 Author: Tim Triche [aut, cre]
