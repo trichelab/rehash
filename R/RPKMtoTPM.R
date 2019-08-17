@@ -29,6 +29,6 @@ RPKMtoTPM <- function(object, ...) {
   } else { 
     stop("Don't know how to compute TPM for an object of class ", class(object))
   }
-  sweep(rpkm, 2, normalizers, `/`) * 1e6
+  sweep(object, 2, normalizers, `/`) * 1e6
 
 }

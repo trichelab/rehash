@@ -22,8 +22,8 @@ Description: Many times, one might like to distribute results via The Cloud
              essentially all available data of a given type, while easing the
              transition of a project from local private data to published,
              internet-accessible evidence upon which others may build. 
-Version: 0.1.5
-Date: 2019-08-16
+Version: 0.1.6
+Date: 2019-08-17
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), email="tim.triche@gmail.com"))
 Author: Tim Triche [aut, cre]
 Maintainer: Tim Triche <trichelab@gmail.com>
