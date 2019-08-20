@@ -42,8 +42,9 @@ dehashSE <- function(x, meta=NULL, covs=NULL) {
 }
 
 # helper 
-.flipMap <- function(x) { 
-  mandatory <- c("original","new","ordering")
+.flipMap <- function(x, deorder=FALSE) { 
+  mandatory <- c("original","new")
+  if (deorder) mandatory <- append(mandatory, "ordering")
   stopifnot(all(mandatory %in% colnames(x)))
   stopifnot(identical(rownames(x), x[["new"]]))
   rownames(x) <- x$original
