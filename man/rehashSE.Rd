@@ -8,7 +8,7 @@
 \title{anonymize (to some degree) a SummarizedExperiment (or an object of a class
 derived from SummarizedExperiment) for quasi-public transfer/dissemination}
 \usage{
-rehashSE(x, salt = "0x", algo = "md5", deorder = T)
+rehashSE(x, salt = "0x", algo = "md5", deorder = FALSE)
 }
 \arguments{
 \item{x}{a \link{Ranged}SummarizedExperiment to anonymize}
@@ -17,7 +17,7 @@ rehashSE(x, salt = "0x", algo = "md5", deorder = T)
 
 \item{algo}{algorithm to use for the one-way hash (default is "md5")}
 
-\item{deorder}{scramble the rows and columns? (TRUE)}
+\item{deorder}{scramble the rows and columns? (FALSE; disrupts data digest)}
 }
 \value{
 \preformatted{     an object of the same class as x, but with hashed dimnames
@@ -25,7 +25,7 @@ rehashSE(x, salt = "0x", algo = "md5", deorder = T)
 }
 \description{
 This is NOT cryptographically secure nor equivalent to a proper 2-key de-ID!
-Also, a separate function for rehash'ing SingleCellExperiments is imminent.
+Specialized functions for rehash'ing specialized SE-like objects are coming.
 }
 \examples{
 
@@ -43,20 +43,21 @@ rse <- SummarizedExperiment(assays=SimpleList(counts=counts),
                             rowRanges=rowRanges, colData=colData)
 covs <- colData(rse)
 
-deIDed <- rehash(rse, salt="testing", algo="md5")
+library(HDF5Array)
+deIDed <- rehash(rse, salt="testing", algo="md5", deorder=FALSE) # default
 meta <- metadata(deIDed)
 metadata(deIDed) <- list() 
-
-library(HDF5Array)
 deIDedPath <- file.path(tempdir() , "deIDed") 
 deIDed <- saveHDF5SummarizedExperiment(deIDed, deIDedPath, replace=TRUE)
 
 reIDed <- dehash(deIDed, meta=meta, covs=covs)
 reIDedPath <- file.path(tempdir() , "reIDed") 
 reIDed <- saveHDF5SummarizedExperiment(reIDed, reIDedPath, replace=TRUE)
+
 if (!is.null(colnames(rse))) {
   stopifnot(identical(colnames(reIDed), colnames(rse)))
 } 
+
 if (!is.null(rownames(rse))) {
   stopifnot(identical(rownames(reIDed), rownames(rse)))
 } 

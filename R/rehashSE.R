@@ -2,12 +2,12 @@
 #' derived from SummarizedExperiment) for quasi-public transfer/dissemination
 #' 
 #' This is NOT cryptographically secure nor equivalent to a proper 2-key de-ID!
-#' Also, a separate function for rehash'ing SingleCellExperiments is imminent.
+#' Specialized functions for rehash'ing specialized SE-like objects are coming.
 #'
 #' @param   x      a [Ranged]SummarizedExperiment to anonymize 
 #' @param   salt    a salting phrase to slow brute-force metadata attacks ("0x")
 #' @param   algo    algorithm to use for the one-way hash (default is "md5") 
-#' @param   deorder scramble the rows and columns? (TRUE) 
+#' @param   deorder scramble the rows and columns? (FALSE; disrupts data digest)
 #' 
 #' @return          an object of the same class as x, but with hashed dimnames
 #' 
@@ -32,24 +32,25 @@
 #'                             rowRanges=rowRanges, colData=colData)
 #' covs <- colData(rse)
 #'
-#' deIDed <- rehash(rse, salt="testing", algo="md5")
+#' library(HDF5Array)
+#' deIDed <- rehash(rse, salt="testing", algo="md5", deorder=FALSE) # default
 #' meta <- metadata(deIDed)
 #' metadata(deIDed) <- list() 
-#' 
-#' library(HDF5Array)
 #' deIDedPath <- file.path(tempdir() , "deIDed") 
 #' deIDed <- saveHDF5SummarizedExperiment(deIDed, deIDedPath, replace=TRUE)
 #'
 #' reIDed <- dehash(deIDed, meta=meta, covs=covs)
 #' reIDedPath <- file.path(tempdir() , "reIDed") 
 #' reIDed <- saveHDF5SummarizedExperiment(reIDed, reIDedPath, replace=TRUE)
+#'
 #' if (!is.null(colnames(rse))) {
 #'   stopifnot(identical(colnames(reIDed), colnames(rse)))
 #' } 
+#'
 #' if (!is.null(rownames(rse))) {
 #'   stopifnot(identical(rownames(reIDed), rownames(rse)))
 #' } 
-#' 
+#'
 #' library(DelayedMatrixStats)
 #' setMethod("counts", "SummarizedExperiment", 
 #'   function(object) assay(object, which(names(assays(object)) == "counts")))
@@ -58,7 +59,7 @@
 #' show(reIDed)
 #' 
 #' @export
-rehashSE <- function(x, salt="0x", algo="md5", deorder=T){
+rehashSE <- function(x, salt="0x", algo="md5", deorder=FALSE){
 
   # features are unseasoned
   oldfeats <- seq_len(nrow(x))
@@ -84,7 +85,7 @@ rehashSE <- function(x, salt="0x", algo="md5", deorder=T){
   asys <- rehash(oldasys, algo=algo)
   if (any(duplicated(asys))) stop(paste0(algo, " collision in assay names!"))
   assaymap <- data.frame(original=oldasys, new=asys, 
-                         ordering=seq_along(asys))
+                         md5=sapply(assays(x), digest))
   rownames(assaymap) <- asys
 
   # wash it
@@ -107,6 +108,7 @@ rehashSE <- function(x, salt="0x", algo="md5", deorder=T){
                           assaymap=assaymap,
                           state="dehydrated",
                           salted="samplemap",
+                          deorder=deorder,
                           salt=salt,
                           algo=algo)
 

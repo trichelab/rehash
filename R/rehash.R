@@ -25,8 +25,11 @@ setGeneric("rehash")
 # basic version
 setMethod("rehash", "SummarizedExperiment", function(x, ...) rehashSE(x, ...))
 
-# needs to include reducedDims and altExps
-setMethod("rehash", "SingleCellExperiment", function(x, ...) rehashSCE(x, ...))
+# needs to include reducedDims and altExps (maybe?)
+# setMethod("rehash", "SingleCellExperiment", function(x,...) rehashSCE(x,...))
 
-# may need to include additional hooks 
-setMethod("rehash", "BSseq", function(x, ...) rehashBSseq(x, ...))
+# may need to include additional hooks here too 
+# setMethod("rehash", "BSseq", function(x, ...) rehashBSseq(x, ...))
+
+# may need to include a hook for annotation here, or just use defaults?
+# setMethod("rehash", "GenomicRatioSet", function(x, ...) rehashGrSet(x, ...))

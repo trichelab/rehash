@@ -29,7 +29,15 @@ dehashSE <- function(x, meta=NULL, covs=NULL) {
   metadata(x)$samplemap <- .flipMap(meta$samplemap)
   metadata(x)$assaymap <- .flipMap(meta$assaymap)
   metadata(x)$state <- "rehydrated"
-  return(.reorder(x))
+  if (meta$deorder) {
+    return(.reorder(x))
+  } else { 
+    checkAsys(x, meta)
+    names(assays(x)) <- .getAsyNames(x, meta=meta)
+    rownames(x) <- .getRowNames(x, meta=meta)
+    colnames(x) <- .getColNames(x, meta=meta)
+    return(x)
+  }
 
 }
 
@@ -115,6 +123,13 @@ dehashSE <- function(x, meta=NULL, covs=NULL) {
 # helper 
 .getAsyNames <- function(x, meta=NULL) {
   .AM(x, meta)[names(assays(x)), "original"]
+}
+
+# helper
+.checkAsys <- function(x, meta=NULL) { 
+  AM <- .AM(x, meta)
+  md5s <- sapply(assays(x), digest)
+  stopifnot(all(md5s == AM$md5))
 }
 
 # helper 
