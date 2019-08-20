@@ -32,7 +32,7 @@ dehashSE <- function(x, meta=NULL, covs=NULL) {
   if (meta$deorder) {
     return(.reorder(x))
   } else { 
-    checkAsys(x, meta)
+    .checkAsys(x, meta)
     names(assays(x)) <- .getAsyNames(x, meta=meta)
     rownames(x) <- .getRowNames(x, meta=meta)
     colnames(x) <- .getColNames(x, meta=meta)
