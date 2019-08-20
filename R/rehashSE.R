@@ -85,7 +85,7 @@ rehashSE <- function(x, salt="0x", algo="md5", deorder=FALSE){
   asys <- rehash(oldasys, algo=algo)
   if (any(duplicated(asys))) stop(paste0(algo, " collision in assay names!"))
   assaymap <- data.frame(original=oldasys, new=asys, 
-                         md5=sapply(assays(x), digest))
+                         md5=sapply(assays(x, withDimnames=FALSE), digest))
   rownames(assaymap) <- asys
 
   # wash it

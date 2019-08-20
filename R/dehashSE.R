@@ -129,7 +129,7 @@ dehashSE <- function(x, meta=NULL, covs=NULL) {
 # helper
 .checkAsys <- function(x, meta=NULL) { 
   AM <- .AM(x, meta)
-  md5s <- sapply(assays(x), digest)
+  md5s <- sapply(assays(x, withDimnames=FALSE), digest)
   stopifnot(all(md5s == AM$md5))
 }
 
