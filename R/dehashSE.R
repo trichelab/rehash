@@ -41,8 +41,12 @@ dehashSE <- function(x, meta=NULL, covs=NULL, check=FALSE) {
   rownames(metadata(x)$assayRowHashes) <- rownames(x)
   rownames(metadata(x)$assayColHashes) <- colnames(x)
   if (check) { 
+    message("Verifying assay rows...", appendLF=FALSE)
     stopifnot(!identical(getAssayRowHashes(x), metadata(x)$assayRowHashes))
+    message("...done.")
+    message("Verifying assay columns...", appendLF=FALSE)
     stopifnot(!identical(getAssayColHashes(x), metadata(x)$assayColHashes))
+    message("...done.")
   }
   return(x)
 
