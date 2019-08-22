@@ -7,7 +7,7 @@
 \alias{rehydrateSE}
 \title{deanonymize (to some degree) a SummarizedExperiment post public dissemination}
 \usage{
-dehashSE(x, meta = NULL, covs = NULL)
+dehashSE(x, meta = NULL, covs = NULL, check = FALSE)
 }
 \arguments{
 \item{x}{a \link{Ranged}SummarizedExperiment to deanonymize}
@@ -15,6 +15,8 @@ dehashSE(x, meta = NULL, covs = NULL)
 \item{meta}{the meta-metadata required to reverse the hashes}
 
 \item{covs}{a data.frame of covariates (rows are samples, columns covs)}
+
+\item{check}{check assay row and column hashes? (FALSE; can be very slow)}
 }
 \value{
 \preformatted{   an object of the same class as x, but with cleartext dimnames

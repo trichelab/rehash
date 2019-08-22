@@ -9,13 +9,14 @@
 #' @param   x       a [Ranged]SummarizedExperiment to deanonymize 
 #' @param   meta    the meta-metadata required to reverse the hashes
 #' @param   covs    a data.frame of covariates (rows are samples, columns covs)
+#' @param   check   check assay row and column hashes? (FALSE; can be very slow)
 #' 
 #' @return        an object of the same class as x, but with cleartext dimnames
 #' 
 #' @aliases dehashSummarizedExperiment rehydrateSummarizedExperiment rehydrateSE
 #' 
 #' @export
-dehashSE <- function(x, meta=NULL, covs=NULL) {
+dehashSE <- function(x, meta=NULL, covs=NULL, check=FALSE) {
   
   if (is.null(meta)) meta <- metadata(x)
   if (length(meta) == 0) stop("Rehydration of an SE needs a metadata decoder.") 
@@ -28,23 +29,28 @@ dehashSE <- function(x, meta=NULL, covs=NULL) {
   metadata(x)$featuremap <- .flipMap(meta$featuremap)
   metadata(x)$samplemap <- .flipMap(meta$samplemap)
   metadata(x)$assaymap <- .flipMap(meta$assaymap)
-  metadata(x)$state <- "rehydrated"
+  metadata(x)$state <- "dehashed"
+  
   if (meta$deorder) {
-    return(.reorder(x))
+    x <- .reorder(x)
   } else { 
-    .checkAsys(x, meta)
     names(assays(x)) <- .getAsyNames(x, meta=meta)
     rownames(x) <- .getRowNames(x, meta=meta)
     colnames(x) <- .getColNames(x, meta=meta)
-    return(x)
   }
+  rownames(metadata(x)$assayRowHashes) <- rownames(x)
+  rownames(metadata(x)$assayColHashes) <- colnames(x)
+  if (check) { 
+    stopifnot(!identical(getAssayRowHashes(x), metadata(x)$assayRowHashes))
+    stopifnot(!identical(getAssayColHashes(x), metadata(x)$assayColHashes))
+  }
+  return(x)
 
 }
 
 # helper 
-.flipMap <- function(x, deorder=FALSE) { 
-  mandatory <- c("original","new")
-  if (deorder) mandatory <- append(mandatory, "ordering")
+.flipMap <- function(x) {
+  mandatory <- c("original", "new", "ordering")
   stopifnot(all(mandatory %in% colnames(x)))
   stopifnot(identical(rownames(x), x[["new"]]))
   rownames(x) <- x$original
@@ -124,13 +130,6 @@ dehashSE <- function(x, meta=NULL, covs=NULL) {
 # helper 
 .getAsyNames <- function(x, meta=NULL) {
   .AM(x, meta)[names(assays(x)), "original"]
-}
-
-# helper
-.checkAsys <- function(x, meta=NULL) { 
-  AM <- .AM(x, meta)
-  md5s <- sapply(assays(x, withDimnames=FALSE), digest)
-  stopifnot(all(md5s == AM$md5))
 }
 
 # helper 
