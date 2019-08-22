@@ -13,46 +13,63 @@ rehashSE(x, salt = "0x", algo = "md5", deorder = FALSE)
 \arguments{
 \item{x}{a \link{Ranged}SummarizedExperiment to anonymize}
 
-\item{salt}{a salting phrase to slow brute-force metadata attacks ("0x")}
+\item{salt}{a salting phrase to slow brute-force attacks ("0x")}
 
 \item{algo}{algorithm to use for the one-way hash (default is "md5")}
 
-\item{deorder}{scramble the rows and columns? (FALSE; disrupts data digest)}
+\item{deorder}{scramble rows and columns? (FALSE; disrupts data digest)}
 }
 \value{
-\preformatted{     an object of the same class as x, but with hashed dimnames
+\preformatted{         an object of the same class as x, with hashed dimnames
 }
 }
 \description{
 This is NOT cryptographically secure nor equivalent to a proper 2-key de-ID!
-Specialized functions for rehash'ing specialized SE-like objects are coming.
+It is likely to dissuade casual attack, but cannot stop a motivated attacker.
+}
+\details{
+Specialized functions for rehash'ing specialized SE-like objects and for
+providing key-exchangeable versions of this functionality are forthcoming.
 }
 \examples{
 
-nrows <- 200
 ncols <- 6
+nrows <- 200
 counts <- matrix(runif(nrows * ncols, 1, 1e4), nrows)
+rownames(counts) <- apply(expand.grid(letters, letters), 1, 
+                          paste0, collapse="")[seq_len(nrow(rse))]
 rowRanges <- GRanges(rep(c("chr1", "chr2"), c(50, 150)),
                      IRanges(floor(runif(200, 1e5, 1e6)), width=100),
                      strand=sample(c("+", "-"), 200, TRUE),
                      feature_id=sprintf("ID\%03d", 1:200))
+names(rowRanges) <- rownames(counts) 
 colData <- DataFrame(Treatment=rep(c("ChIP", "Input"), 3),
                      row.names=LETTERS[1:6])
 
+# a toy RangedSummarizedExperiment (?SummarizedExperiment) 
 rse <- SummarizedExperiment(assays=SimpleList(counts=counts),
                             rowRanges=rowRanges, colData=colData)
+assays(rse)$cpm <- sweep(assays(rse)$counts * 1e6, 2, normalizers, `/`)
 covs <- colData(rse)
 
-library(HDF5Array)
+# rehash the toy RangedSummarizedExperiment:
+
 deIDed <- rehash(rse, salt="testing", algo="md5", deorder=FALSE) # default
+
+# save and wipe the metadata (which otherwise allows direct dehashing):
+
 meta <- metadata(deIDed)
 metadata(deIDed) <- list() 
+
+# test it out with HDF5-backed storage:
+
+library(HDF5Array)
 deIDedPath <- file.path(tempdir() , "deIDed") 
 deIDed <- saveHDF5SummarizedExperiment(deIDed, deIDedPath, replace=TRUE)
 
+# recover the rehashed object using the saved metadata:
+
 reIDed <- dehash(deIDed, meta=meta, covs=covs)
-reIDedPath <- file.path(tempdir() , "reIDed") 
-reIDed <- saveHDF5SummarizedExperiment(reIDed, reIDedPath, replace=TRUE)
 
 if (!is.null(colnames(rse))) {
   stopifnot(identical(colnames(reIDed), colnames(rse)))
@@ -62,11 +79,14 @@ if (!is.null(rownames(rse))) {
   stopifnot(identical(rownames(reIDed), rownames(rse)))
 } 
 
+# check the counts themselves:
 library(DelayedMatrixStats)
 setMethod("counts", "SummarizedExperiment", 
   function(object) assay(object, which(names(assays(object)) == "counts")))
 stopifnot(identical(colSums2(counts(reIDed)), colSums2(counts(rse))))
 stopifnot(identical(rowSums2(counts(reIDed)), rowSums2(counts(rse))))
+
+# seeing is believing
 show(reIDed)
 
 }
