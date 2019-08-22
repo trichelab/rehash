@@ -22,7 +22,7 @@ Description: Many times, one might like to distribute results via The Cloud
              essentially all available data of a given type, while easing the
              transition of a project from local private data to published,
              internet-accessible evidence upon which others may build. 
-Version: 0.1.11
+Version: 0.1.12
 Date: 2019-08-22
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), email="tim.triche@gmail.com"))
 Author: Tim Triche [aut, cre]
@@ -37,6 +37,7 @@ Imports:
     recount, 
     SummarizedExperiment,
     SingleCellExperiment,
+    minfi, 
     bsseq
 Suggests:
     covr,
