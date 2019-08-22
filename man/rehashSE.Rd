@@ -8,12 +8,15 @@
 \title{anonymize (to some degree) a SummarizedExperiment (or an object of a class
 derived from SummarizedExperiment) for quasi-public transfer/dissemination}
 \usage{
-rehashSE(x, salt = "0x", algo = "md5", deorder = FALSE)
+rehashSE(x, salt = "0x", strip = TRUE, algo = "md5",
+  deorder = FALSE)
 }
 \arguments{
 \item{x}{a \link{Ranged}SummarizedExperiment to anonymize}
 
 \item{salt}{a salting phrase to slow brute-force attacks ("0x")}
+
+\item{strip}{strip rehashed objects of any deID'ing metadata? (TRUE)}
 
 \item{algo}{algorithm to use for the one-way hash (default is "md5")}
 
@@ -53,23 +56,17 @@ assays(rse)$cpm <- sweep(assays(rse)$counts * 1e6, 2, normalizers, `/`)
 covs <- colData(rse)
 
 # rehash the toy RangedSummarizedExperiment:
-
-deIDed <- rehash(rse, salt="testing", algo="md5", deorder=FALSE) # default
-
-# save and wipe the metadata (which otherwise allows direct dehashing):
-
-meta <- metadata(deIDed)
-metadata(deIDed) <- list() 
+res <- rehash(rse, salt="testing", strip=TRUE, algo="md5", deorder=FALSE)
+deIDed <- res$object
 
 # test it out with HDF5-backed storage:
-
 library(HDF5Array)
 deIDedPath <- file.path(tempdir() , "deIDed") 
 deIDed <- saveHDF5SummarizedExperiment(deIDed, deIDedPath, replace=TRUE)
 
 # recover the rehashed object using the saved metadata:
-
-reIDed <- dehash(deIDed, meta=meta, covs=covs)
+meta <- res$meta
+reIDed <- dehash(deIDed, meta=meta, covs=covs, check=TRUE)
 
 if (!is.null(colnames(rse))) {
   stopifnot(identical(colnames(reIDed), colnames(rse)))
@@ -78,13 +75,6 @@ if (!is.null(colnames(rse))) {
 if (!is.null(rownames(rse))) {
   stopifnot(identical(rownames(reIDed), rownames(rse)))
 } 
-
-# check the counts themselves:
-library(DelayedMatrixStats)
-setMethod("counts", "SummarizedExperiment", 
-  function(object) assay(object, which(names(assays(object)) == "counts")))
-stopifnot(identical(colSums2(counts(reIDed)), colSums2(counts(rse))))
-stopifnot(identical(rowSums2(counts(reIDed)), rowSums2(counts(rse))))
 
 # seeing is believing
 show(reIDed)

@@ -29,7 +29,5 @@ rehash
 
 dehashSE
 
-dehashSCE
-
-dehashBSseq
+dehashMAE
 }

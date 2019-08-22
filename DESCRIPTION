@@ -22,7 +22,7 @@ Description: Many times, one might like to distribute results via The Cloud
              essentially all available data of a given type, while easing the
              transition of a project from local private data to published,
              internet-accessible evidence upon which others may build. 
-Version: 0.1.12
+Version: 0.1.14
 Date: 2019-08-22
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), email="tim.triche@gmail.com"))
 Author: Tim Triche [aut, cre]
@@ -35,16 +35,16 @@ Depends:
 Imports:
     digest,
     recount, 
+    minfi, 
+    bsseq,
     SummarizedExperiment,
     SingleCellExperiment,
-    minfi, 
-    bsseq
+    MultiAssayExperiment,
 Suggests:
     covr,
     testthat,
     HDF5Array,
     restfulSE,
-    DelayedMatrixStats,
-    MultiAssayExperiment
+    DelayedMatrixStats
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)

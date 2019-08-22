@@ -9,6 +9,7 @@
 #'
 #' @param   x           a [Ranged]SummarizedExperiment to anonymize 
 #' @param   salt        a salting phrase to slow brute-force attacks ("0x")
+#' @param   strip       strip rehashed objects of any deID'ing metadata? (TRUE)
 #' @param   algo        algorithm to use for the one-way hash (default is "md5")
 #' @param   deorder     scramble rows and columns? (FALSE; disrupts data digest)
 #' 
@@ -41,23 +42,17 @@
 #' covs <- colData(rse)
 #'
 #' # rehash the toy RangedSummarizedExperiment:
+#' res <- rehash(rse, salt="testing", strip=TRUE, algo="md5", deorder=FALSE)
+#' deIDed <- res$object
 #' 
-#' deIDed <- rehash(rse, salt="testing", algo="md5", deorder=FALSE) # default
-#' 
-#' # save and wipe the metadata (which otherwise allows direct dehashing):
-#' 
-#' meta <- metadata(deIDed)
-#' metadata(deIDed) <- list() 
-#'
 #' # test it out with HDF5-backed storage:
-#' 
 #' library(HDF5Array)
 #' deIDedPath <- file.path(tempdir() , "deIDed") 
 #' deIDed <- saveHDF5SummarizedExperiment(deIDed, deIDedPath, replace=TRUE)
 #'
 #' # recover the rehashed object using the saved metadata:
-#' 
-#' reIDed <- dehash(deIDed, meta=meta, covs=covs)
+#' meta <- res$meta
+#' reIDed <- dehash(deIDed, meta=meta, covs=covs, check=TRUE)
 #'
 #' if (!is.null(colnames(rse))) {
 #'   stopifnot(identical(colnames(reIDed), colnames(rse)))
@@ -67,18 +62,11 @@
 #'   stopifnot(identical(rownames(reIDed), rownames(rse)))
 #' } 
 #'
-#' # check the counts themselves:
-#' library(DelayedMatrixStats)
-#' setMethod("counts", "SummarizedExperiment", 
-#'   function(object) assay(object, which(names(assays(object)) == "counts")))
-#' stopifnot(identical(colSums2(counts(reIDed)), colSums2(counts(rse))))
-#' stopifnot(identical(rowSums2(counts(reIDed)), rowSums2(counts(rse))))
-#' 
 #' # seeing is believing
 #' show(reIDed)
 #' 
 #' @export
-rehashSE <- function(x, salt="0x", algo="md5", deorder=FALSE) { 
+rehashSE <- function(x, salt="0x", strip=TRUE, algo="md5", deorder=FALSE) { 
 
   # features are unseasoned
   oldfeats <- seq_len(nrow(x))
@@ -138,13 +126,18 @@ rehashSE <- function(x, salt="0x", algo="md5", deorder=FALSE) {
                           salt=salt,
                           algo=algo)
 
-  if (deorder) {
-    # inefficient, don't do this
-    return(.deorder(newSE))
-  } else {
-    return(newSE)
-  }
+  if (deorder) newSE <- .deorder(newSE)
+  if (strip) return(.stripSE(newSE))
+  else return(newSE)
 
+}
+
+# helper fn
+.stripSE <- function(x) { 
+  meta <- metadata(x)
+  metadata(x) <- list()
+  res <- list(object=x, meta=meta)
+  return(res)
 }
 
 # helper fn

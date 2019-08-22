@@ -10,13 +10,10 @@
 #' 
 #' @seealso rehash
 #' @seealso dehashSE
-#' @seealso dehashSCE
-#' @seealso dehashBSseq 
+#' @seealso dehashMAE
 #'
-#' @import minfi
-#' @import bsseq
 #' @import SummarizedExperiment
-#' @import SingleCellExperiment
+#' @import MultiAssayExperiment
 #'
 #' @export
 dehash <- function(x, ...) {
@@ -29,11 +26,14 @@ setGeneric("dehash")
 # basic version
 setMethod("dehash", "SummarizedExperiment", function(x, ...) dehashSE(x, ...))
 
+# recursively dehash a linked MultiAssayExperiment and its constituent objects
+setMethod("dehash", "MultiAssayExperiment", function(x,...) dehashMAE(x,...))
+
 # needs to include reducedDims and altExps?
 # setMethod("dehash", "SingleCellExperiment", function(x,...) dehashSCE(x,...))
 
 # needs to include assorted other stuff? (maybe)
 # setMethod("dehash", "BSseq", function(x, ...) dehashBSseq(x, ...))
 
-# needs to include assorted other stuff? (maybe not!)
+# needs to include assorted other stuff? (or maybe just revertGrSet() on it)
 # setMethod("dehash", "GenomicRatioSet", function(x, ...) dehashGrSet(x, ...))

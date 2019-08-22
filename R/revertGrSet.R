@@ -11,7 +11,7 @@
 #' @param  grSet    a SummarizedExperiment, often HDF5-backed, from a grSet
 #' @param  HM       optional indicator of what platform grSet is made from 
 #' 
-#' @import minfi
+#' @importFrom minfi GenomicRatioSet
 #' 
 #' @export 
 revertGrSet <- function(grSet, HM=c("EPIC","HM450","HM27")) { 

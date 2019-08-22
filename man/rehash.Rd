@@ -4,12 +4,14 @@
 \alias{rehash}
 \title{a salty hashing function (and a generic that dispatches it)}
 \usage{
-rehash(x, salt = NULL, ...)
+rehash(x, salt = NULL, strip = TRUE, ...)
 }
 \arguments{
 \item{x}{the string to hash}
 
 \item{salt}{the salt to apply (NULL)}
+
+\item{strip}{strip down rehashed objects to remove deID'ing features? (TRUE)}
 
 \item{...}{other parameters to pass on to digest::digest}
 }
@@ -25,7 +27,5 @@ dehash
 
 rehashSE
 
-rehashSCE
-
-rehashBSseq
+rehashMAE
 }
