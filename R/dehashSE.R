@@ -6,7 +6,16 @@
 #' slot of the dehydrated SummarizedExperiment, it will be used, else it must 
 #' be supplied by the user. Optionally, the data itself may be verified.
 #'
-#' @param   x       a [Ranged]SummarizedExperiment to deanonymize 
+#' * A list result from rehash(x, ..., strip=TRUE) can be passed as `x` (the
+#'   first argument to dehashSE) for testing purposes. In such cases, it will
+#'   be disassembled into the necessary symbols to dehash the object. However,
+#'   saving the list for distribution defeats the purpose of rehash()ing it, 
+#'   so don't do that in production. This hook exists ONLY for testing! If a 
+#'   list is detected as the argument, row and column hashes WILL be checked
+#'   (regardless of the value of `check` in the function call), partly to 
+#'   discourage routine use of this functionality in production.
+#' 
+#' @param   x       a [Ranged]SummarizedExperiment to deanonymize, or a list* 
 #' @param   meta    the meta-metadata required to reverse the hashes
 #' @param   covs    a data.frame of covariates (rows are samples, columns covs)
 #' @param   check   check assay row and column hashes? (FALSE; can be very slow)
@@ -18,6 +27,13 @@
 #' @export
 dehashSE <- function(x, meta=NULL, covs=NULL, check=FALSE) {
   
+  if (is.list(x)) { # only for testing! seriously! 
+    if (is.null(meta) & "meta" %in% names(x)) meta <- x$meta
+    if (is.null(covs) & "covs" %in% names(x)) covs <- x$covs
+    x <- x$object
+    check <- TRUE
+  }
+
   if (is.null(meta)) meta <- metadata(x)
   if (length(meta) == 0) stop("Rehydration of an SE needs a metadata decoder.") 
   if (!all(c("samplemap","featuremap","assaymap") %in% names(meta))) {

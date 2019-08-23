@@ -3,12 +3,11 @@ Type: Package
 Title: Lightly anonymize and deanonymize datasets for quasi-public distribution
 Description: Many times, one might like to distribute results via The Cloud 
              before they are necessarily static enough to deposit in, say, SRA.
-             Of course, once something is available on the Internet, it may as 
-             well be permanent. Thus it would be nice to obscure any identifying
+             Of course, for general use, one might want to obscure identifying
              features of the data, lest data leakage harm a study participant,
              or more generally to keep things semi-private before publication.
              Breaking direct dependencies upon human-readable identifiers for
-             datasets can help cope with this, and also encourage iterative QC,
+             datasets can help cope with this, and also encourage iterative QC
              by data, as well as semantically separating sample-, assay-, and 
              feature-level covariates from the deidentified assay data. This 
              approach works with local and remote data, in-core and out-of-core.
@@ -21,9 +20,14 @@ Description: Many times, one might like to distribute results via The Cloud
              package, thereby expanding both distribution and comparison to 
              essentially all available data of a given type, while easing the
              transition of a project from local private data to published,
-             internet-accessible evidence upon which others may build. 
-Version: 0.1.14
-Date: 2019-08-22
+             internet-accessible evidence upon which others may build. Finally,
+             in situations where moving SummarizedExperiment-like objects to
+             and from HDF5-backed formats causes issues (most obviously, minfi 
+             GenomicRatioSet objects), rehash provides some utilities to fix 
+             the resulting omissions, so that dehashed HDF5 objects work as 
+             a user would expect them to work in typical workflows. 
+Version: 0.1.15
+Date: 2019-08-23
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), email="tim.triche@gmail.com"))
 Author: Tim Triche [aut, cre]
 Maintainer: Tim Triche <trichelab@gmail.com>

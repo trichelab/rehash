@@ -10,7 +10,7 @@
 dehashSE(x, meta = NULL, covs = NULL, check = FALSE)
 }
 \arguments{
-\item{x}{a \link{Ranged}SummarizedExperiment to deanonymize}
+\item{x}{a \link{Ranged}SummarizedExperiment to deanonymize, or a list*}
 
 \item{meta}{the meta-metadata required to reverse the hashes}
 
@@ -28,4 +28,16 @@ a salting phrase, and knowledge of whether the salt phrase was applied to
 features, samples, both, or neither. If the metadata is left in the metadata
 slot of the dehydrated SummarizedExperiment, it will be used, else it must
 be supplied by the user. Optionally, the data itself may be verified.
+}
+\details{
+\itemize{
+\item A list result from rehash(x, ..., strip=TRUE) can be passed as \code{x} (the
+first argument to dehashSE) for testing purposes. In such cases, it will
+be disassembled into the necessary symbols to dehash the object. However,
+saving the list for distribution defeats the purpose of rehash()ing it,
+so don't do that in production. This hook exists ONLY for testing! If a
+list is detected as the argument, row and column hashes WILL be checked
+(regardless of the value of \code{check} in the function call), partly to
+discourage routine use of this functionality in production.
+}
 }
