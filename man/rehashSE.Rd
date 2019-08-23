@@ -2,9 +2,7 @@
 % Please edit documentation in R/rehashSE.R
 \name{rehashSE}
 \alias{rehashSE}
-\alias{dehydrateSummarizedExperiment}
 \alias{rehashSummarizedExperiment}
-\alias{dehydrateSE}
 \title{anonymize (to some degree) a SummarizedExperiment (or an object of a class
 derived from SummarizedExperiment) for quasi-public transfer/dissemination}
 \usage{
@@ -33,6 +31,17 @@ It is likely to dissuade casual attack, but cannot stop a motivated attacker.
 \details{
 Specialized functions for rehash'ing specialized SE-like objects and for
 providing key-exchangeable versions of this functionality are forthcoming.
+
+Assay renaming currently works by matching the assay name to the actual
+hdf5 path name used in HDF5 backing files (assays.h5), as produced by
+HDF5Array::saveHDF5SummarizedExperiment(...).  This should ease interop
+with e.g. Python consumers of the data (they'll still need reverse mappings
+for the column and row names, but that's not too terribly difficult either).
+
+At some point, it may make more sense to save metadata for rehash/dehash
+purposes to a relatively language-agnostic data format like Feather, or
+else break up all the pieces into CSVs and write a Python package to handle
+the reversing of hash-mappings. Either should be fine for interop.
 }
 \examples{
 

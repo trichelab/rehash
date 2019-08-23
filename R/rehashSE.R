@@ -7,6 +7,17 @@
 #' Specialized functions for rehash'ing specialized SE-like objects and for 
 #' providing key-exchangeable versions of this functionality are forthcoming.
 #'
+#' Assay renaming currently works by matching the assay name to the actual 
+#' hdf5 path name used in HDF5 backing files (assays.h5), as produced by 
+#' HDF5Array::saveHDF5SummarizedExperiment(...).  This should ease interop
+#' with e.g. Python consumers of the data (they'll still need reverse mappings
+#' for the column and row names, but that's not too terribly difficult either). 
+#' 
+#' At some point, it may make more sense to save metadata for rehash/dehash 
+#' purposes to a relatively language-agnostic data format like Feather, or 
+#' else break up all the pieces into CSVs and write a Python package to handle
+#' the reversing of hash-mappings. Either should be fine for interop. 
+#' 
 #' @param   x           a [Ranged]SummarizedExperiment to anonymize 
 #' @param   salt        a salting phrase to slow brute-force attacks ("0x")
 #' @param   strip       strip rehashed objects of any deID'ing metadata? (TRUE)
@@ -15,7 +26,7 @@
 #' 
 #' @return              an object of the same class as x, with hashed dimnames
 #' 
-#' @aliases dehydrateSummarizedExperiment rehashSummarizedExperiment dehydrateSE
+#' @aliases rehashSummarizedExperiment
 #' 
 #' @import  SummarizedExperiment
 #' @import  digest
@@ -88,11 +99,9 @@ rehashSE <- function(x, salt="0x", strip=TRUE, algo="md5", deorder=FALSE) {
   rownames(samplemap) <- samps
 
 
-  # assays are neither seasoned nor reordered 
+  # assays are neither seasoned nor reordered but rather refer to HDF5 paths
   oldasys <- seq_along(assays(x))
-  if (!is.null(names(assays(x)))) oldasys <- names(assays(x))
-  asys <- rehash(oldasys, algo=algo)
-  if (any(duplicated(asys))) stop(paste0(algo, " collision in assay names!"))
+  asys <- sprintf("assay%03d", oldasys)
   assaymap <- data.frame(original=oldasys, new=asys, 
                          ordering=seq_along(assays(x)))
   rownames(assaymap) <- asys
@@ -150,9 +159,3 @@ rehashSE <- function(x, salt="0x", strip=TRUE, algo="md5", deorder=FALSE) {
 
 # alias 
 rehashSummarizedExperiment <- rehashSE
-
-# alias 
-dehydrateSummarizedExperiment <- rehashSE
-
-# alias 
-dehydrateSE <- rehashSE 

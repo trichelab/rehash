@@ -3,8 +3,6 @@
 \name{dehashSE}
 \alias{dehashSE}
 \alias{dehashSummarizedExperiment}
-\alias{rehydrateSummarizedExperiment}
-\alias{rehydrateSE}
 \title{deanonymize (to some degree) a SummarizedExperiment post public dissemination}
 \usage{
 dehashSE(x, meta = NULL, covs = NULL, check = FALSE)

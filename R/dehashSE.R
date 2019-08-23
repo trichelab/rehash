@@ -22,7 +22,7 @@
 #' 
 #' @return        an object of the same class as x, but with cleartext dimnames
 #' 
-#' @aliases dehashSummarizedExperiment rehydrateSummarizedExperiment rehydrateSE
+#' @aliases dehashSummarizedExperiment
 #' 
 #' @export
 dehashSE <- function(x, meta=NULL, covs=NULL, check=FALSE) {
@@ -168,10 +168,4 @@ dehashSE <- function(x, meta=NULL, covs=NULL, check=FALSE) {
 }
 
 # alias
-rehydrateSummarizedExperiment <- dehashSE 
-
-# alias
-rehashSummarizedExperiment <- dehashSE 
-
-# alias
-rehydrateSE <- dehashSE 
+dehashSummarizedExperiment <- dehashSE 
