@@ -62,7 +62,7 @@ colData <- DataFrame(Treatment=rep(c("ChIP", "Input"), 3),
 rse <- SummarizedExperiment(assays=SimpleList(counts=counts),
                             rowRanges=rowRanges, colData=colData)
 assays(rse)$cpm <- sweep(assays(rse)$counts * 1e6, 2, normalizers, `/`)
-covs <- colData(rse)
+covs <- colData(rse) # alternative to pulling these from res$covs
 
 # rehash the toy RangedSummarizedExperiment:
 res <- rehash(rse, salt="testing", strip=TRUE, algo="md5", deorder=FALSE)
@@ -75,6 +75,7 @@ deIDed <- saveHDF5SummarizedExperiment(deIDed, deIDedPath, replace=TRUE)
 
 # recover the rehashed object using the saved metadata:
 meta <- res$meta
+covs <- res$covs
 reIDed <- dehash(deIDed, meta=meta, covs=covs, check=TRUE)
 
 if (!is.null(colnames(rse))) {

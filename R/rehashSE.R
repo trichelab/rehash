@@ -50,7 +50,7 @@
 #' rse <- SummarizedExperiment(assays=SimpleList(counts=counts),
 #'                             rowRanges=rowRanges, colData=colData)
 #' assays(rse)$cpm <- sweep(assays(rse)$counts * 1e6, 2, normalizers, `/`)
-#' covs <- colData(rse)
+#' covs <- colData(rse) # alternative to pulling these from res$covs
 #'
 #' # rehash the toy RangedSummarizedExperiment:
 #' res <- rehash(rse, salt="testing", strip=TRUE, algo="md5", deorder=FALSE)
@@ -63,6 +63,7 @@
 #'
 #' # recover the rehashed object using the saved metadata:
 #' meta <- res$meta
+#' covs <- res$covs
 #' reIDed <- dehash(deIDed, meta=meta, covs=covs, check=TRUE)
 #'
 #' if (!is.null(colnames(rse))) {
@@ -116,6 +117,8 @@ rehashSE <- function(x, salt="0x", strip=TRUE, algo="md5", deorder=FALSE) {
   }
   rowData(newSE) <- DataFrame(feature=feats, row.names=feats)
 
+  # store for stripped 
+  covs <- colData(newSE)
   colnames(newSE) <- samps
   colData(newSE) <- DataFrame(sample=samps, row.names=samps)
 
@@ -136,16 +139,17 @@ rehashSE <- function(x, salt="0x", strip=TRUE, algo="md5", deorder=FALSE) {
                           algo=algo)
 
   if (deorder) newSE <- .deorder(newSE)
-  if (strip) return(.stripSE(newSE))
+  if (strip) return(.stripSE(newSE, covs))
   else return(newSE)
 
 }
 
 # helper fn
-.stripSE <- function(x) { 
+.stripSE <- function(x, covs=NULL) { 
   meta <- metadata(x)
   metadata(x) <- list()
   res <- list(object=x, meta=meta)
+  if (!is.null(covs)) res$covs <- covs
   return(res)
 }
 
