@@ -26,8 +26,8 @@ Description: Many times, one might like to distribute results via The Cloud
              GenomicRatioSet objects), rehash provides some utilities to fix 
              the resulting omissions, so that dehashed HDF5 objects work as 
              a user would expect them to work in typical workflows. 
-Version: 0.1.19
-Date: 2019-08-23
+Version: 0.1.21
+Date: 2019-09-16
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), email="tim.triche@gmail.com"))
 Author: Tim Triche [aut, cre]
 Maintainer: Tim Triche <trichelab@gmail.com>
@@ -38,14 +38,14 @@ Depends:
     R (>= 3.0.0)
 Imports:
     digest,
-    recount, 
     minfi, 
     bsseq,
     SummarizedExperiment,
     SingleCellExperiment,
-    MultiAssayExperiment,
+    MultiAssayExperiment
 Suggests:
     covr,
+    recount, 
     testthat,
     HDF5Array,
     restfulSE,
