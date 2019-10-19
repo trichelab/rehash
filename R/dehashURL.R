@@ -4,9 +4,6 @@
 #' payload, you MUST NOT apply this function to it. We'll try to snoop the file
 #' header, but that is NOT strong protection. Download and inspect if unsure.
 #' 
-#' @import recount
-#'
-#' @export
 dehashURL <- function(x, ...) {
 
   stop("Not implemented yet.") 

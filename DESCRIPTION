@@ -26,9 +26,9 @@ Description: Many times, one might like to distribute results via The Cloud
              GenomicRatioSet objects), rehash provides some utilities to fix 
              the resulting omissions, so that dehashed HDF5 objects work as 
              a user would expect them to work in typical workflows. 
-Version: 0.1.22
+Version: 0.1.23
 Date: 2019-10-18
-Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), email="tim.triche@gmail.com"))
+Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), email="trichelab@gmail.com"))
 Author: Tim Triche [aut, cre]
 Maintainer: Tim Triche <trichelab@gmail.com>
 URL: https://github.com/trichelab/rehash
@@ -37,6 +37,7 @@ License: MIT + file LICENSE
 Depends:
     R (>= 3.0.0)
 Imports:
+    gpg,
     digest,
     minfi, 
     bsseq,

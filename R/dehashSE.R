@@ -157,7 +157,7 @@ dehashSE <- function(x, meta=NULL, covs=NULL, check=FALSE) {
   if (!"original" %in% colnames(covs)) {
     covs$original <- rownames(covs)
     rownames(covs) <- sapply(covs$original, 
-                             indigestion, 
+                             rehash, 
                              salt=with(meta, 
                                        ifelse(salted=="samplemap", salt, "")),
                              algo=meta$algo)
