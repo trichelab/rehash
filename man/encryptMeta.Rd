@@ -4,13 +4,13 @@
 \alias{encryptMeta}
 \title{Encrypt metadata for a rehashed dataset with GPG, for secure transfers}
 \usage{
-encryptMeta(meta, recipientName)
+encryptMeta(meta, recipient)
 }
 \arguments{
 \item{meta}{the metadata to decrypt (an object or a .gpg file)}
 }
 \value{
-a metadata decoder object for \code{\link[rehash]{dehash}} to use
+an encrypted metadata decoder (or, really, any object)
 }
 \description{
 For users who have a GPG keyring with entries for both themselves (sender)
@@ -36,7 +36,7 @@ via the \url{https://cran.r-project.org/web/packages/gpg/}{gpg R package}.
 data(exampleSE)
 rehashed <- rehash(exampleSE)
 object <- rehashed$object
-encrypted <- encryptMeta(rehashed$meta, receiver="Tim Triche, Jr.")
+encrypted <- encryptMeta(rehashed$meta, recipient="Tim Triche, Jr.")
 decrypted <- decryptMeta(encrypted)
 identical(decrypted, rehashed$meta)
 rehashed <- NULL # no peeking!

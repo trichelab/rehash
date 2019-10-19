@@ -10,7 +10,7 @@ decryptMeta(meta)
 \item{encrypted}{the metadata to decrypt (an object or a .rds file)}
 }
 \value{
-\preformatted{         metadata decoder for \code{\link[rehash]{dehash}}
+\preformatted{         a metadata decoder for `dehash` (or another object)
 }
 }
 \description{
@@ -39,7 +39,7 @@ FIXME: make it possible to use a .gpg file for the transport format.
 data(exampleSE)
 rehashed <- rehash(exampleSE)
 object <- rehashed$object
-encrypted <- encryptMeta(rehashed$meta, receiver="Tim Triche, Jr.")
+encrypted <- encryptMeta(rehashed$meta, recipient="Tim Triche, Jr.")
 decrypted <- decryptMeta(encrypted)
 identical(decrypted, rehashed$meta)
 rehashed <- NULL # no peeking!

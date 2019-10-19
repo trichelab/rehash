@@ -20,13 +20,13 @@
 #' 
 #' @param   meta  the metadata to decrypt (an object or a .gpg file)
 #' 
-#' @return  a metadata decoder object for \code{\link[rehash]{dehash}} to use
+#' @return  an encrypted metadata decoder (or, really, any object)
 #'
 #' @examples
 #' data(exampleSE)
 #' rehashed <- rehash(exampleSE)
 #' object <- rehashed$object
-#' encrypted <- encryptMeta(rehashed$meta, receiver="Tim Triche, Jr.")
+#' encrypted <- encryptMeta(rehashed$meta, recipient="Tim Triche, Jr.")
 #' decrypted <- decryptMeta(encrypted)
 #' identical(decrypted, rehashed$meta)
 #' rehashed <- NULL # no peeking!
@@ -39,6 +39,6 @@
 #' @import gpg
 #' 
 #' @export
-encryptMeta <- function(meta, recipientName) { 
-  charToRaw(gpg_encrypt(serialize(meta, NULL), receiver=recipientName))
+encryptMeta <- function(meta, recipient) { 
+  charToRaw(gpg_encrypt(serialize(meta, NULL), receiver=recipient))
 }

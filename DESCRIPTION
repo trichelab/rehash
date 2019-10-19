@@ -6,28 +6,11 @@ Description: Many times, one might like to distribute results via The Cloud
              Of course, for general use, one might want to obscure identifying
              features of the data, lest data leakage harm a study participant,
              or more generally to keep things semi-private before publication.
-             Breaking direct dependencies upon human-readable identifiers for
-             datasets can help cope with this, and also encourage iterative QC
-             by data, as well as semantically separating sample-, assay-, and 
-             feature-level covariates from the deidentified assay data. This 
-             approach works with local and remote data, in-core and out-of-core.
              The rehash package offers implementations to lightly anonymize 
-             SummarizedExperiments, SingleCellExperiments, and BSseq objects, 
-             as well as recovering the above, given a meta-data key and, 
-             optionally, appropriately keyed covariates. The package also 
-             includes some utilities for matching existing semi-private data
-             sets with fully public resources such as those in the recount
-             package, thereby expanding both distribution and comparison to 
-             essentially all available data of a given type, while easing the
-             transition of a project from local private data to published,
-             internet-accessible evidence upon which others may build. Finally,
-             in situations where moving SummarizedExperiment-like objects to
-             and from HDF5-backed formats causes issues (most obviously, minfi 
-             GenomicRatioSet objects), rehash provides some utilities to fix 
-             the resulting omissions, so that dehashed HDF5 objects work as 
-             a user would expect them to work in typical workflows. 
-Version: 0.1.23
-Date: 2019-10-18
+             SummarizedExperiments, MultiAssayExperiments, and BSseq objects, 
+             as well as tools for GPG-encrypted transfer of decoder objects.
+Version: 0.1.24
+Date: 2019-10-19
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), email="trichelab@gmail.com"))
 Author: Tim Triche [aut, cre]
 Maintainer: Tim Triche <trichelab@gmail.com>
@@ -38,15 +21,14 @@ Depends:
     R (>= 3.0.0)
 Imports:
     gpg,
-    digest,
     minfi, 
     bsseq,
+    digest,
     SummarizedExperiment,
     SingleCellExperiment,
     MultiAssayExperiment
 Suggests:
     covr,
-    recount, 
     testthat,
     HDF5Array,
     restfulSE,

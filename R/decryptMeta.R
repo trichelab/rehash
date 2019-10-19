@@ -22,13 +22,13 @@
 #' 
 #' @param   encrypted   the metadata to decrypt (an object or a .rds file)
 #' 
-#' @return              metadata decoder for \code{\link[rehash]{dehash}}
+#' @return              a metadata decoder for `dehash` (or another object)
 #' 
 #' @examples
 #' data(exampleSE)
 #' rehashed <- rehash(exampleSE)
 #' object <- rehashed$object
-#' encrypted <- encryptMeta(rehashed$meta, receiver="Tim Triche, Jr.")
+#' encrypted <- encryptMeta(rehashed$meta, recipient="Tim Triche, Jr.")
 #' decrypted <- decryptMeta(encrypted)
 #' identical(decrypted, rehashed$meta)
 #' rehashed <- NULL # no peeking!
